@@ -18,7 +18,9 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.gifting.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="landscape"
+            android:configChanges="orientation"> <!-- keeps orientation when screen turns off -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

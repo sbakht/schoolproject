@@ -1,20 +1,29 @@
 package com.example.gifting;
 
-import android.media.MediaPlayer;
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.Bundle;
 import android.view.Menu;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 public class MainActivity extends Activity {
+	VideoView videoView;
 
-	//blah blah test
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		MediaPlayer mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.test);
-		mediaPlayer.start(); // no need to call prepare(); create() does that for you
+		videoView =(VideoView)findViewById(R.id.videoView);
+		MediaController mediaController= new MediaController(this);
+	    mediaController.setAnchorView(videoView);        
+	    Uri uri=Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.test);        
+	    videoView.setMediaController(mediaController);
+	    videoView.setVideoURI(uri);        
+	    videoView.requestFocus();
+
+	    videoView.start();
 		
 	}
 
@@ -24,5 +33,21 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
+	
+	@Override
+	protected void onPause() {
+	    super.onPause();
+	    videoView.suspend();
+	}
 
+	@Override
+	protected void onResume() {
+	    super.onResume();
+	    videoView.resume();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+	    super.onConfigurationChanged(newConfig);
+	}
 }
