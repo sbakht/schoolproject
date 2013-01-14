@@ -9,7 +9,9 @@
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- prevent screen diming during video playback -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+ <!-- prevent screen diming during video playback -->
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
     <application
         android:allowBackup="true"
@@ -18,14 +20,19 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.gifting.MainActivity"
-            android:label="@string/app_name" 
-            android:screenOrientation="landscape"
-            android:configChanges="orientation"> <!-- keeps orientation when screen turns off -->
+            android:configChanges="orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+ <!-- keeps orientation when screen turns off -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.gifting.Record"
+            android:label="@string/title_activity_record" >
         </activity>
     </application>
 
