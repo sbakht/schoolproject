@@ -9,12 +9,17 @@ import android.view.Menu;
 
 public class Record extends Activity {
 
+	private static final int ACTION_TAKE_VIDEO = 3;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_record);
-		if(hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+		PackageManager pm=this.getPackageManager();
+		if(!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+			//create an alert dialog
 			
+		}else{
 			
 		}
 	}
