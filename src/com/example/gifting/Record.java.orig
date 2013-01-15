@@ -30,8 +30,12 @@ public class Record extends Activity implements OnClickListener{
 		if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
 			// create an alert dialog
 			alertbox("Error", "You Do Not Have A Camera");
+		} else {
+
+
+		
 			
-		}else{
+		
 			b1=(Button)findViewById(R.id.button1);
 			b1.setOnClickListener(this);
 			dispatchTakeVideoIntent();
@@ -76,5 +80,6 @@ public class Record extends Activity implements OnClickListener{
 			break;
 		}
 	}
+
 
 }
