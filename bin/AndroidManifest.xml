@@ -24,7 +24,7 @@
             android:name="com.example.gifting.Record"
             android:label="@string/title_activity_record" >
             <intent-filter>
-                <action android:name="android.intent.action.RECORD" />
+                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -37,7 +37,7 @@
 
             <!-- keeps orientation when screen turns off -->
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAINACTIVITY" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

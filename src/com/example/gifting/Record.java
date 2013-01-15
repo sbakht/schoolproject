@@ -6,12 +6,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.VideoView;
 
 public class Record extends Activity implements OnClickListener{
 
@@ -19,8 +23,12 @@ public class Record extends Activity implements OnClickListener{
 
 
 
-	Button b1;
-
+	private Button b1;
+	private ImageView mImageView;
+	private VideoView mVideoView;
+	private Uri mVideoUri;
+	private Bitmap mImageBitmap;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,6 +43,11 @@ public class Record extends Activity implements OnClickListener{
 			b1=(Button)findViewById(R.id.button1);
 			b1.setOnClickListener(this);
 			//dispatchTakeVideoIntent();
+			
+			mImageView = (ImageView) findViewById(R.id.imageView1);
+			mVideoView = (VideoView) findViewById(R.id.videoView1);
+			mImageBitmap = null;
+			mVideoUri = null;
 		}
 	}
 
@@ -74,6 +87,26 @@ public class Record extends Activity implements OnClickListener{
 			dispatchTakeVideoIntent();
 			break;
 		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case ACTION_TAKE_VIDEO: {
+			if (resultCode == RESULT_OK) {
+				handleCameraVideo(data);
+			}
+			break;
+		} // ACTION_TAKE_VIDEO
+		} // switch
+	}
+	
+	private void handleCameraVideo(Intent intent) {
+		mVideoUri = intent.getData();
+		mVideoView.setVideoURI(mVideoUri);
+		mImageBitmap = null;
+		mVideoView.setVisibility(View.VISIBLE);
+		mImageView.setVisibility(View.INVISIBLE);
 	}
 
 }
