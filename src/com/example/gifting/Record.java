@@ -34,8 +34,7 @@ public class Record extends Activity implements OnClickListener{
 		}else{
 			b1=(Button)findViewById(R.id.button1);
 			b1.setOnClickListener(this);
-			fdispatchTakeVideoIntent();
-
+			//dispatchTakeVideoIntent();
 		}
 	}
 
