@@ -5,11 +5,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,8 +23,8 @@ public class Record extends Activity implements OnClickListener{
 
 	private static final int ACTION_TAKE_VIDEO = 3;
 
-
-
+	
+	Display d;
 	private Button b1;
 	private ImageView mImageView;
 	private VideoView mVideoView;
@@ -33,7 +35,8 @@ public class Record extends Activity implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_record);
-
+		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); 
+		//d=(Display)
 		PackageManager pm = this.getPackageManager();
 		if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
 			// create an alert dialog
@@ -85,6 +88,7 @@ public class Record extends Activity implements OnClickListener{
 		case R.id.button1:
 			//basically the same as before but sends an empty string for the address and sends the string containing all previous searches
 			dispatchTakeVideoIntent();
+			//this.setRequestedOrientation(d.getRotation());
 			break;
 		}
 	}
