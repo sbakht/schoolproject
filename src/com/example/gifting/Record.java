@@ -9,7 +9,11 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
+//import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,6 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+//import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -28,13 +33,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 public class Record extends Activity implements OnClickListener{
 
 	private static final int ACTION_TAKE_VIDEO = 3;
 
-	
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
 	Display d;
 	private Button b1;
 	private ImageView mImageView;
@@ -43,6 +50,7 @@ public class Record extends Activity implements OnClickListener{
 	private Bitmap mImageBitmap;
 	boolean mExternalStorageAvailable = false;
 	boolean mExternalStorageWriteable = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,9 +82,17 @@ public class Record extends Activity implements OnClickListener{
 	}
 
 	private void dispatchTakeVideoIntent() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		Uri fileUri = null;
+		fileUri.parse(dateFormat.format(date).toString());
+		System.out.println(dateFormat.format(date));
 		Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-		takeVideoIntent.putExtra("android.intent.extra.durationLimit", 5000);
-		startActivityForResult(takeVideoIntent, ACTION_TAKE_VIDEO);
+		takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5000);
+		takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);  // set the image file name
+
+		//startActivityForResult(takeVideoIntent, ACTION_TAKE_VIDEO);
+		startActivityForResult(takeVideoIntent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
 	}
 
 
@@ -126,14 +142,38 @@ public class Record extends Activity implements OnClickListener{
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case ACTION_TAKE_VIDEO: {
-			if (resultCode == RESULT_OK) {
-				handleCameraVideo(data);
-			}
-			break;
-		} // ACTION_TAKE_VIDEO
-		} // switch
+		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+	        if (resultCode == RESULT_OK) {
+	            // Image captured and saved to fileUri specified in the Intent
+	            Toast.makeText(this, "Image saved to:\n" +
+	                     data.getData(), Toast.LENGTH_LONG).show();
+	        } else if (resultCode == RESULT_CANCELED) {
+	            // User cancelled the image capture
+	        } else {
+	            // Image capture failed, advise user
+	        }
+	    }
+
+	    if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
+	        if (resultCode == RESULT_OK) {
+	            // Video captured and saved to fileUri specified in the Intent
+	            Toast.makeText(this, "Video saved to:\n" +
+	                     data.getData(), Toast.LENGTH_LONG).show();
+	        } else if (resultCode == RESULT_CANCELED) {
+	            // User cancelled the video capture
+	        } else {
+	            // Video capture failed, advise user
+	        }
+	    }
+	    
+		//switch (requestCode) {
+		//case ACTION_TAKE_VIDEO: {
+			//if (resultCode == RESULT_OK) {
+				//handleCameraVideo(data);
+			//}
+			//break;
+		//} // ACTION_TAKE_VIDEO
+		//} // switch
 	}
 	
 	private void handleCameraVideo(Intent intent) {
