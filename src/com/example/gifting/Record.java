@@ -41,7 +41,8 @@ public class Record extends Activity implements OnClickListener{
 	private VideoView mVideoView;
 	private Uri mVideoUri;
 	private Bitmap mImageBitmap;
-	
+	boolean mExternalStorageAvailable = false;
+	boolean mExternalStorageWriteable = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,6 +99,24 @@ public class Record extends Activity implements OnClickListener{
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.button1:
+			//checks if external storage is mounted properly
+			String state = Environment.getExternalStorageState();
+			if (Environment.MEDIA_MOUNTED.equals(state)) {
+			    // We can read and write the media
+			    mExternalStorageAvailable = mExternalStorageWriteable = true;
+			    dispatchTakeVideoIntent();
+			} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			    // We can only read the media
+			    mExternalStorageAvailable = true;
+			    mExternalStorageWriteable = false;
+			    alertbox("Read Only Error", "External Storage is mounted Read-Only. Recommend Restart");
+			} else {
+			    // Something else is wrong. It may be one of many other states, but all we need
+			    //  to know is we can neither read nor write
+			    mExternalStorageAvailable = mExternalStorageWriteable = false;
+			    alertbox("Read/Write Error", "External Storage is does not have proper permissions. Recommend Restart");
+			}
+			
 			//basically the same as before but sends an empty string for the address and sends the string containing all previous searches
 			dispatchTakeVideoIntent();
 			//this.setRequestedOrientation(d.getRotation());
