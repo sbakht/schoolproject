@@ -89,7 +89,10 @@ public class Record extends Activity implements OnClickListener{
 		System.out.println(dateFormat.format(date));
 		Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 		takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5000);
-		takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);  // set the image file name
+		//takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);  // set the image file name
+
+		Uri uriSavedImage=Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/Redex/flashCroppededdr.mp4"));
+		takeVideoIntent.putExtra("output", uriSavedImage);
 
 		//startActivityForResult(takeVideoIntent, ACTION_TAKE_VIDEO);
 		startActivityForResult(takeVideoIntent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
@@ -120,6 +123,7 @@ public class Record extends Activity implements OnClickListener{
 			if (Environment.MEDIA_MOUNTED.equals(state)) {
 			    // We can read and write the media
 			    mExternalStorageAvailable = mExternalStorageWriteable = true;
+			    createDirIfNotExists(Environment.getExternalStorageDirectory().getPath()+"Redex/");
 			    dispatchTakeVideoIntent();
 			} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
 			    // We can only read the media
@@ -134,7 +138,7 @@ public class Record extends Activity implements OnClickListener{
 			}
 			
 			//basically the same as before but sends an empty string for the address and sends the string containing all previous searches
-			dispatchTakeVideoIntent();
+			//dispatchTakeVideoIntent();
 			//this.setRequestedOrientation(d.getRotation());
 			break;
 		}
@@ -184,6 +188,19 @@ public class Record extends Activity implements OnClickListener{
 		mImageView.setVisibility(View.INVISIBLE);
 	}
 
+	public static boolean createDirIfNotExists(String path) {
+	    boolean ret = true;
+
+	    File file = new File(Environment.getExternalStorageDirectory(), path);
+	    if (!file.exists()) {
+	        if (!file.mkdirs()) {
+	            Log.e("TravellerLog :: ", "Problem creating Image folder");
+	            ret = false;
+	        }
+	    }
+	    return ret;
+	}
+	
 	private void doFileUpload(){
         HttpURLConnection conn = null;
         DataOutputStream dos = null;
@@ -265,4 +282,5 @@ public class Record extends Activity implements OnClickListener{
              Log.e("Debug", "error: " + ioex.getMessage(), ioex);
         }
       }
+	
 }
