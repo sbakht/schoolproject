@@ -163,7 +163,6 @@ pip-log.txt
 .DS_Store
 
 ################ignoring everything but xml and java files
-bin/classes/com/example/gifting/
-bin/classes.dex
-bin/com.redex.redex.apk
-bin/resourcs.ap_
+gen/
+bin/
+!bin/res/

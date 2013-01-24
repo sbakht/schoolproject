@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -19,6 +20,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -80,8 +82,6 @@ public class Record extends Activity implements OnClickListener {
 		return true;
 	}
 
-	
-
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -122,9 +122,9 @@ public class Record extends Activity implements OnClickListener {
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
 		Date date = new Date();
 		Uri fileUri = null;
-		String currentTime=dateFormat.format(date).toString();
+		String currentTime = dateFormat.format(date).toString();
 		fileUri.parse(dateFormat.format(date).toString());
-		//System.out.println(dateFormat.format(date));
+		// System.out.println(dateFormat.format(date));
 		Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 		takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5000);
 		// takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set
@@ -132,14 +132,16 @@ public class Record extends Activity implements OnClickListener {
 
 		Uri uriSavedImage = Uri.fromFile(new File(Environment
 				.getExternalStorageDirectory().getPath()
-				+ "/Redex/"+currentTime+".mp4"));
-		takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+				+ "/Redex/"
+				+ currentTime + ".mp4"));
+
+		// takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
 
 		// startActivityForResult(takeVideoIntent, ACTION_TAKE_VIDEO);
 		startActivityForResult(takeVideoIntent,
 				CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -157,8 +159,36 @@ public class Record extends Activity implements OnClickListener {
 		if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				// Video captured and saved to fileUri specified in the Intent
-				Toast.makeText(this, "Video saved to:\n" + data.getData(),
-						Toast.LENGTH_LONG).show();
+				DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+				Date date = new Date();
+				String currentTime = dateFormat.format(date).toString();
+				try {
+					AssetFileDescriptor videoAsset = getContentResolver()
+							.openAssetFileDescriptor(data.getData(), "r");
+					FileInputStream fis = videoAsset.createInputStream();
+					File videoFile = new File(
+							Environment.getExternalStorageDirectory(),
+							"/Redex/" + currentTime + ".mp4");
+					FileOutputStream fos = new FileOutputStream(videoFile);
+
+					byte[] buffer = new byte[1024];
+					int length;
+					while ((length = fis.read(buffer)) > 0) {
+						fos.write(buffer, 0, length);
+					}
+					fis.close();
+					fos.close();
+				} catch (IOException e) {
+					// TODO: handle error
+				}
+
+				try {
+					Toast.makeText(this, "Video saved to:\n /Redex/" + currentTime + ".mp4",
+							Toast.LENGTH_LONG).show();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the video capture
 			} else {
@@ -187,10 +217,11 @@ public class Record extends Activity implements OnClickListener {
 	public static boolean createDirIfNotExists(String path) {
 		boolean ret = true;
 
-		File folder = new File(Environment.getExternalStorageDirectory()+"/Redex");
-		
+		File folder = new File(Environment.getExternalStorageDirectory()
+				+ "/Redex");
+
 		if (!folder.exists()) {
-			//folder.mkdirs();
+			// folder.mkdirs();
 			if (!folder.mkdirs()) {
 				Log.e("TravellerLog :: ", "Problem creating Image folder");
 				ret = false;
