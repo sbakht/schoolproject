@@ -45,6 +45,7 @@ public class Record extends Activity implements OnClickListener {
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
 	Display d;
 	private Button b1;
+	private Button b2;
 	private ImageView mImageView;
 	private VideoView mVideoView;
 	private Uri mVideoUri;
@@ -65,7 +66,9 @@ public class Record extends Activity implements OnClickListener {
 
 		} else {
 			b1 = (Button) findViewById(R.id.button1);
+			b2 = (Button) findViewById(R.id.bUpload);
 			b1.setOnClickListener(this);
+			b2.setOnClickListener(this);
 			// dispatchTakeVideoIntent();
 
 			mImageView = (ImageView) findViewById(R.id.imageView1);
@@ -114,6 +117,10 @@ public class Record extends Activity implements OnClickListener {
 			// address and sends the string containing all previous searches
 			// dispatchTakeVideoIntent();
 			// this.setRequestedOrientation(d.getRotation());
+			break;
+		case R.id.bUpload:
+			Intent openStartingPoint = new Intent("com.ANDROIDUPLOADACTIVITY");
+			startActivity(openStartingPoint);
 			break;
 		}
 	}
@@ -168,7 +175,7 @@ public class Record extends Activity implements OnClickListener {
 					FileInputStream fis = videoAsset.createInputStream();
 					File videoFile = new File(
 							Environment.getExternalStorageDirectory(),
-							"/Redex/" + currentTime + ".mp4");
+							"/Redex/" + "derp" + ".mp4");
 					FileOutputStream fos = new FileOutputStream(videoFile);
 
 					byte[] buffer = new byte[1024];
@@ -182,9 +189,20 @@ public class Record extends Activity implements OnClickListener {
 					// TODO: handle error
 				}
 
+				// alertbox("what","how");
+				doFileUpload();
+				// alertbox("yes","done");
 				try {
-					Toast.makeText(this, "Video saved to:\n /Redex/" + currentTime + ".mp4",
+					Toast.makeText(this,
+							"Video saved to:\n /Redex/" + currentTime + ".mp4",
 							Toast.LENGTH_LONG).show();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				try {
+					// doFileUpload();
+					// alertbox("yes","done");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -235,7 +253,7 @@ public class Record extends Activity implements OnClickListener {
 		DataOutputStream dos = null;
 		DataInputStream inStream = null;
 		String existingFileName = Environment.getExternalStorageDirectory()
-				.getAbsolutePath() + "/mypic.png";
+				.getPath() + "/Redex/derp.mp4";
 		String lineEnd = "\r\n";
 		String twoHyphens = "--";
 		String boundary = "*****";
@@ -321,4 +339,5 @@ public class Record extends Activity implements OnClickListener {
 							}
 						}).show();
 	}
+
 }
