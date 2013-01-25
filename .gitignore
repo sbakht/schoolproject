@@ -163,6 +163,6 @@ pip-log.txt
 .DS_Store
 
 ################ignoring everything but xml and java files
-gen/
-bin/
+#gen/
+#bin/
 !bin/res/
