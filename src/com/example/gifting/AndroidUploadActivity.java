@@ -17,14 +17,16 @@ import android.widget.Toast;
 public class AndroidUploadActivity extends Activity {
 	/** Called when the activity is first created. */
 	TextView textView1;
-
+	String gotFilename="";
 	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_androidupload);
-
+		Bundle gotBasket = getIntent().getExtras();
+		gotFilename = gotBasket.getString("filename");
+		
 		textView1 = (TextView) findViewById(R.id.textView1);
 		/*
 		try {
@@ -74,7 +76,7 @@ public class AndroidUploadActivity extends Activity {
         DataOutputStream outputStream = null;
 
         String pathToOurFile = Environment.getExternalStorageDirectory()
-				.getPath() + "/Redex/derp.mp4";
+				.getPath() + "/Redex/"+gotFilename;
         String urlServer = "http://pushbackstudios.com/directory/uploader.php";
         String lineEnd = "\r\n";
         String twoHyphens = "--";

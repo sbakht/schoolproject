@@ -14,11 +14,12 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-<<<<<<< HEAD
+        public static final int bScan=0x7f080006;
+        public static final int bScanCode=0x7f080007;
         public static final int bUpload=0x7f080005;
         public static final int button1=0x7f080003;
         public static final int imageView1=0x7f080004;
-        public static final int menu_settings=0x7f080006;
+        public static final int menu_settings=0x7f080008;
         public static final int textView1=0x7f080000;
         public static final int videoView=0x7f080001;
         public static final int videoView1=0x7f080002;
@@ -27,18 +28,7 @@ public final class R {
         public static final int activity_androidupload=0x7f030000;
         public static final int activity_main=0x7f030001;
         public static final int activity_record=0x7f030002;
-=======
-        public static final int button1=0x7f080002;
-        public static final int imageView1=0x7f080004;
-        public static final int menu_settings=0x7f080005;
-        public static final int textView1=0x7f080003;
-        public static final int videoView=0x7f080000;
-        public static final int videoView1=0x7f080001;
-    }
-    public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int activity_record=0x7f030001;
->>>>>>> parent of c3fdb6a... .gitignore now working
+        public static final int activity_scan=0x7f030003;
     }
     public static final class menu {
         public static final int activity_main=0x7f070000;

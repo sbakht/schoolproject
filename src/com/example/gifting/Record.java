@@ -46,13 +46,16 @@ public class Record extends Activity implements OnClickListener {
 	Display d;
 	private Button b1;
 	private Button b2;
+	private Button b3;
 	private ImageView mImageView;
 	private VideoView mVideoView;
 	private Uri mVideoUri;
 	private Bitmap mImageBitmap;
 	boolean mExternalStorageAvailable = false;
 	boolean mExternalStorageWriteable = false;
-
+	boolean recorded=false;
+	String recordedFilename="";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,8 +70,10 @@ public class Record extends Activity implements OnClickListener {
 		} else {
 			b1 = (Button) findViewById(R.id.button1);
 			b2 = (Button) findViewById(R.id.bUpload);
+			b3 = (Button) findViewById(R.id.bScan);
 			b1.setOnClickListener(this);
 			b2.setOnClickListener(this);
+			b3.setOnClickListener(this);
 			// dispatchTakeVideoIntent();
 
 			mImageView = (ImageView) findViewById(R.id.imageView1);
@@ -119,8 +124,19 @@ public class Record extends Activity implements OnClickListener {
 			// this.setRequestedOrientation(d.getRotation());
 			break;
 		case R.id.bUpload:
-			Intent openStartingPoint = new Intent("com.ANDROIDUPLOADACTIVITY");
-			startActivity(openStartingPoint);
+			if(recorded){
+				Intent uploadAct = new Intent("com.ANDROIDUPLOADACTIVITY");
+				Bundle basket = new Bundle();
+				basket.putString("filename", recordedFilename);
+				uploadAct.putExtras(basket);
+				startActivity(uploadAct);
+			}else{
+				//error message here
+			}
+			break;
+		case R.id.bScan:
+			Intent startScan=new Intent("com.SCAN");
+			startActivity(startScan);
 			break;
 		}
 	}
@@ -141,7 +157,7 @@ public class Record extends Activity implements OnClickListener {
 				.getExternalStorageDirectory().getPath()
 				+ "/Redex/"
 				+ currentTime + ".mp4"));
-
+		recordedFilename=currentTime+".mp4";
 		// takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
 
 		// startActivityForResult(takeVideoIntent, ACTION_TAKE_VIDEO);
@@ -166,16 +182,17 @@ public class Record extends Activity implements OnClickListener {
 		if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				// Video captured and saved to fileUri specified in the Intent
-				DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
-				Date date = new Date();
-				String currentTime = dateFormat.format(date).toString();
+				//DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+				//Date date = new Date();
+				//String currentTime = dateFormat.format(date).toString();
+				recorded=true;
 				try {
 					AssetFileDescriptor videoAsset = getContentResolver()
 							.openAssetFileDescriptor(data.getData(), "r");
 					FileInputStream fis = videoAsset.createInputStream();
 					File videoFile = new File(
 							Environment.getExternalStorageDirectory(),
-							"/Redex/" + "derp" + ".mp4");
+							"/Redex/" + recordedFilename);
 					FileOutputStream fos = new FileOutputStream(videoFile);
 
 					byte[] buffer = new byte[1024];
@@ -190,11 +207,11 @@ public class Record extends Activity implements OnClickListener {
 				}
 
 				// alertbox("what","how");
-				doFileUpload();
+				//doFileUpload();
 				// alertbox("yes","done");
 				try {
 					Toast.makeText(this,
-							"Video saved to:\n /Redex/" + currentTime + ".mp4",
+							"Video saved to:\n /Redex/" + recordedFilename,
 							Toast.LENGTH_LONG).show();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -253,7 +270,7 @@ public class Record extends Activity implements OnClickListener {
 		DataOutputStream dos = null;
 		DataInputStream inStream = null;
 		String existingFileName = Environment.getExternalStorageDirectory()
-				.getPath() + "/Redex/derp.mp4";
+				.getPath() + "/Redex/"+recordedFilename;
 		String lineEnd = "\r\n";
 		String twoHyphens = "--";
 		String boundary = "*****";
